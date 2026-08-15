@@ -180,8 +180,8 @@ function compressImage(file) {
 function App() {
   const [route, setRoute] = useState(() => window.location.pathname)
   const [language, setLanguage] = useState(() => {
-    const saved = localStorage.getItem('portfolio_lang')
-    return saved || 'id'
+    const saved = localStorage.getItem('lang')
+    return saved === 'en' || saved === 'id' ? saved : 'id'
   })
   const [portfolio, setPortfolio] = useState(defaultPortfolio)
   const [authUser, setAuthUser] = useState(null)
@@ -221,7 +221,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    localStorage.setItem('portfolio_lang', language)
+    localStorage.setItem('lang', language)
   }, [language])
 
   useEffect(() => {
@@ -473,6 +473,7 @@ function App() {
   const homeTitle = currentLanguage === 'en' ? portfolio.home.title_en : portfolio.home.title_id
   const homeDesc = currentLanguage === 'en' ? portfolio.home.desc_en : portfolio.home.desc_id
   const aboutText = currentLanguage === 'en' ? portfolio.about.text_en : portfolio.about.text_id
+  const profileImage = loadingPortfolio ? null : portfolio.profilePhoto
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
@@ -568,11 +569,15 @@ function App() {
               >
                 <div className="absolute inset-4 rounded-full border border-cyan-300/40" />
                 <div className="profile-ring flex h-[290px] w-[290px] items-center justify-center rounded-full border border-white/10 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 p-3 shadow-[0_0_60px_rgba(34,211,238,0.15)] sm:h-[320px] sm:w-[320px]">
-                  <img
-                    src={portfolio.profilePhoto}
-                    alt="Bambang S"
-                    className="h-full w-full rounded-full object-cover"
-                  />
+                  {loadingPortfolio ? (
+                    <div className="h-full w-full animate-pulse rounded-full bg-gray-800" />
+                  ) : (
+                    <img
+                      src={profileImage}
+                      alt="Bambang S"
+                      className="h-full w-full rounded-full object-cover"
+                    />
+                  )}
                 </div>
               </motion.div>
             </motion.div>
@@ -750,6 +755,10 @@ function AdminDashboard({ portfolio, setPortfolio, onLogout }) {
     } catch (error) {
       setMessage(error.message || 'Upload gagal')
     }
+  }
+
+  const handleProfilePhotoUrl = (value) => {
+    setFormData((prev) => ({ ...prev, profilePhoto: value }))
   }
 
   const handleSave = async () => {
@@ -941,10 +950,24 @@ function AdminDashboard({ portfolio, setPortfolio, onLogout }) {
           <div className="space-y-6 rounded-3xl border border-white/10 bg-slate-900/70 p-5">
             <section className="space-y-4">
               <h2 className="text-xl font-semibold text-white">Profile Photo</h2>
-              <input type="file" accept="image/*" onChange={handleImageUpload} className="block w-full text-sm text-slate-300" />
+              <div className="space-y-3">
+                <input
+                  type="url"
+                  value={formData.profilePhoto || ''}
+                  onChange={(event) => handleProfilePhotoUrl(event.target.value)}
+                  placeholder="https://example.com/profile.jpg"
+                  className="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2.5 text-white"
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="block w-full text-sm text-slate-300"
+                />
+              </div>
               <div className="mt-4 flex justify-center">
                 <img
-                  src={formData.profilePhoto}
+                  src={formData.profilePhoto || heroImg}
                   alt="Preview"
                   className="h-48 w-48 rounded-full object-cover border border-cyan-400/40 shadow-[0_0_30px_rgba(34,211,238,0.25)]"
                 />

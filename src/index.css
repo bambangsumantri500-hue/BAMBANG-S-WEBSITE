@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  background: #020817;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #020817;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.profile-ring {
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-ring::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.6), rgba(59, 130, 246, 0.3), transparent);
+  z-index: -1;
+  filter: blur(18px);
+}
+
+.contact-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.contact-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+
+.contact-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 30px rgba(34, 211, 238, 0.4);
+  filter: brightness(1.08);
+}
+
+.contact-btn:hover::before {
+  transform: translateX(120%);
+}
+
+.typing-text {
+  min-width: 8ch;
+}
+
+.skill-card {
+  background: rgba(15, 23, 42, 0.72);
+  box-shadow: 0 15px 30px rgba(15, 23, 42, 0.28);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skill-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(34, 211, 238, 0.45);
+  box-shadow: 0 22px 45px rgba(14, 116, 144, 0.22);
+}
+
+@media (max-width: 640px) {
+  .typing-text {
+    min-width: 6ch;
+  }
+}

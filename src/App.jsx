@@ -3,6 +3,7 @@ import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebas
 import { doc, onSnapshot, setDoc } from 'firebase/firestore'
 import { useEffect, useRef, useState } from 'react'
 import { auth, db } from './firebase'
+import heroImg from './assets/hero.png'
 
 const defaultPortfolio = {
   home: {
@@ -47,8 +48,7 @@ const defaultPortfolio = {
     email: 'bambang.example@gmail.com',
     ig: '@bambang_s',
   },
-  profilePhoto:
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80',
+  profilePhoto: heroImg,
   language: 'id',
 }
 

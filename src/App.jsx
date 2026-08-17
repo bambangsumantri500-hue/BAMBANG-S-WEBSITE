@@ -1,9 +1,10 @@
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { doc, onSnapshot, setDoc } from 'firebase/firestore'
 import { useEffect, useRef, useState } from 'react'
 import { auth, db } from './firebase'
 import heroImg from './assets/hero.png'
+import Preloader from './components/Preloader'
 
 const defaultPortfolio = {
   home: {
@@ -179,6 +180,10 @@ function compressImage(file) {
 
 function App() {
   const [route, setRoute] = useState(() => window.location.pathname)
+  const [showPreloader, setShowPreloader] = useState(() => {
+    // Only show on main public page, skip on admin
+    return !window.location.pathname.startsWith('/admin')
+  })
   const [language, setLanguage] = useState(() => {
     const saved = localStorage.getItem('lang')
     return saved === 'en' || saved === 'id' ? saved : 'id'
@@ -323,11 +328,8 @@ function App() {
 
       ctx.beginPath()
       ctx.fillStyle = hexToRgba(star.color, alpha)
-      ctx.shadowBlur = 12
-      ctx.shadowColor = star.color
       ctx.arc(star.x + parallaxX, star.y + parallaxY, star.radius, 0, Math.PI * 2)
       ctx.fill()
-      ctx.shadowBlur = 0
     }
 
     const drawConstellation = (constellation) => {
@@ -477,6 +479,12 @@ function App() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
+      <AnimatePresence mode="wait">
+        {showPreloader && (
+          <Preloader onComplete={() => setShowPreloader(false)} />
+        )}
+      </AnimatePresence>
+
       <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 z-0" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 lg:px-8">
